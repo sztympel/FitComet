@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.text.DecimalFormat;
 
@@ -32,6 +33,11 @@ public class MainActivity extends AppCompatActivity
     public boolean kgTrue = true;
     FirebaseAuth mAuth;
 
+    DatabaseReference mDatabaseRef;
+
+    TextView tvZapotrzebowanie;
+
+    CircularProgressBar circularProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +49,9 @@ public class MainActivity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        TextView tvZapotrzebowanie = findViewById(R.id.zapotrzebowanietxt);
+        tvZapotrzebowanie = findViewById(R.id.zapotrzebowanietxt);
 
+        circularProgressBar = (CircularProgressBar)findViewById(R.id.circularProgressBar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -55,6 +62,25 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         mAuth = FirebaseAuth.getInstance();
+
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Dane");
+
+        mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                double userKalorie = dataSnapshot.child("TargetKalorie").getValue(Double.class);
+                tvZapotrzebowanie.setText(String.format("%.0f",userKalorie));
+                circularProgressBar.setProgressMax((float)userKalorie);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
+
+
     }
 
 
