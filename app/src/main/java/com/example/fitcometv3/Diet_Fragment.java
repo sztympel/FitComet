@@ -25,9 +25,8 @@ public class Diet_Fragment extends Fragment {
     CheckBox cbSniadanie, cbObiad, cbKolacja;
     TextView tvKalorie, tvSniadanie, tvObiad, tvKolacja;
 
-    int userWiek, userWaga, userWzrost;
-    double userKalorie, userPoziomAktywnosci;
-    String wylosowano;
+    double userKalorie;
+    String wylosowano="0";
 
     FirebaseAuth mAuth;
     DatabaseReference mDatabaseRef, mPosilkiRef, mChecksRef;
@@ -55,28 +54,7 @@ public class Diet_Fragment extends Fragment {
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("Plec").getValue().toString().equals("mezczyzna"))
-                {
-                    userWaga = dataSnapshot.child("Waga").getValue(Integer.class);
-                    userWzrost = dataSnapshot.child("Wzrost").getValue(Integer.class);
-                    userWiek = dataSnapshot.child("Wiek").getValue(Integer.class);
-                    userPoziomAktywnosci = dataSnapshot.child("PoziomAktywnosci").getValue(Double.class);
-
-                    userKalorie = (66.5 + (13.7 * userWaga) + (5 * userWzrost) - (6.8 * userWiek)) * userPoziomAktywnosci;
-                    tvKalorie.setText(String.format("%.0f", userKalorie));
-                    mDatabaseRef.child("TargetKalorie").setValue(userKalorie);
-                }
-                else
-                {
-                    userWaga = dataSnapshot.child("Waga").getValue(Integer.class);
-                    userWzrost = dataSnapshot.child("Wzrost").getValue(Integer.class);
-                    userWiek = dataSnapshot.child("Wiek").getValue(Integer.class);
-                    userPoziomAktywnosci = dataSnapshot.child("PoziomAktywnosci").getValue(Double.class);
-
-                    userKalorie = (655 + (9.6 * userWaga) + (1.85 * userWzrost) - (4.7 * userWiek)) * userPoziomAktywnosci;
-                    tvKalorie.setText(String.format("%.0f", userKalorie));
-                    mDatabaseRef.child("TargetKalorie").setValue(userKalorie);
-                }
+                userKalorie = dataSnapshot.child("TargetKalorie").getValue(Double.class);
             }
 
 
@@ -89,8 +67,22 @@ public class Diet_Fragment extends Fragment {
         mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                wylosowano = dataSnapshot.child("wylosowano").getValue().toString().trim();
-                tvSniadanie.setText(wylosowano);
+                if(dataSnapshot.child("wylosowano").exists()){
+                    wylosowano = dataSnapshot.child("wylosowano").getValue().toString().trim();
+                    tvSniadanie.setText(wylosowano);
+                    if (dataSnapshot.child("ZSniadanie").getValue().toString().trim().equals("true")) {
+                        cbSniadanie.setChecked(true);
+                        cbSniadanie.setEnabled(false);
+                    }
+                    if (dataSnapshot.child("ZObiad").getValue().toString().trim().equals("true")){
+                        cbObiad.setChecked(true);
+                        cbObiad.setEnabled(false);
+                    }
+                    if(dataSnapshot.child("ZKolacja").getValue().toString().trim().equals("true")) {
+                        cbKolacja.setChecked(true);
+                        cbKolacja.setEnabled(false);
+                    }
+                }
             }
 
             @Override
@@ -102,8 +94,6 @@ public class Diet_Fragment extends Fragment {
         mPosilkiRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                //userKalorie jest widoczne, dieta jako zestawy co 100 kalorii, <2000, 3000>, łapiące przedział 50
-                //ewentualnie zamiana z posilkiem z innego zestawu, ale tego samego poziomu kalorii
                 if(wylosowano.equals("0"))
                 {
                     if (userKalorie < 1950)

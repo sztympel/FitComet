@@ -31,11 +31,17 @@ import java.text.DecimalFormat;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public boolean kgTrue = true;
+    int kalorieSniadanie, kalorieObiad, kalorieKolacja;
+    String wylosowano = "0";
+
+    int userWiek, userWaga, userWzrost;
+    double userKalorie, userPoziomAktywnosci;
+
     FirebaseAuth mAuth;
 
-    DatabaseReference mDatabaseRef;
+    DatabaseReference mDatabaseRef, mPosilkiRef, mChecksRef;
 
-    TextView tvZapotrzebowanie;
+    TextView tvZapotrzebowanie, tvTaki;
 
     CircularProgressBar circularProgressBar;
 
@@ -50,8 +56,9 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         tvZapotrzebowanie = findViewById(R.id.zapotrzebowanietxt);
+        tvTaki = findViewById(R.id.textViewTaki);
 
-        circularProgressBar = (CircularProgressBar)findViewById(R.id.circularProgressBar);
+        circularProgressBar = findViewById(R.id.circularProgressBar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -63,23 +70,90 @@ public class MainActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
 
+        mPosilkiRef = FirebaseDatabase.getInstance().getReference().child("Posilki");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Dane");
+        mChecksRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Checks");
 
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                double userKalorie = dataSnapshot.child("TargetKalorie").getValue(Double.class);
-                tvZapotrzebowanie.setText(String.format("%.0f",userKalorie));
-                circularProgressBar.setProgressMax((float)userKalorie);
+                if(dataSnapshot.child("Plec").getValue().toString().equals("mezczyzna"))
+                {
+                    userWaga = dataSnapshot.child("Waga").getValue(Integer.class);
+                    userWzrost = dataSnapshot.child("Wzrost").getValue(Integer.class);
+                    userWiek = dataSnapshot.child("Wiek").getValue(Integer.class);
+                    userPoziomAktywnosci = dataSnapshot.child("PoziomAktywnosci").getValue(Double.class);
+
+                    userKalorie = (66.5 + (13.7 * userWaga) + (5 * userWzrost) - (6.8 * userWiek)) * userPoziomAktywnosci;
+                    tvZapotrzebowanie.setText(String.format("%.0f", userKalorie));
+                    mDatabaseRef.child("TargetKalorie").setValue(userKalorie);
+                    circularProgressBar.setProgressMax((float)userKalorie);
+                }
+                else
+                {
+                    userWaga = dataSnapshot.child("Waga").getValue(Integer.class);
+                    userWzrost = dataSnapshot.child("Wzrost").getValue(Integer.class);
+                    userWiek = dataSnapshot.child("Wiek").getValue(Integer.class);
+                    userPoziomAktywnosci = dataSnapshot.child("PoziomAktywnosci").getValue(Double.class);
+
+                    userKalorie = (655 + (9.6 * userWaga) + (1.85 * userWzrost) - (4.7 * userWiek)) * userPoziomAktywnosci;
+                    tvZapotrzebowanie.setText(String.format("%.0f", userKalorie));
+                    mDatabaseRef.child("TargetKalorie").setValue(userKalorie);
+                    circularProgressBar.setProgressMax((float)userKalorie);
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child("wylosowano").exists())
+                    wylosowano = dataSnapshot.child("wylosowano").getValue().toString().trim();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mPosilkiRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!wylosowano.equals("0"))
+                {
+                    tvTaki.setText(wylosowano);
+                    kalorieSniadanie = dataSnapshot.child(String.valueOf(wylosowano)).child("Śniadanie").getValue(Integer.class);
+                    kalorieObiad = dataSnapshot.child(String.valueOf(wylosowano)).child("Obiad").getValue(Integer.class);
+                    kalorieKolacja = dataSnapshot.child(String.valueOf(wylosowano)).child("Kolacja").getValue(Integer.class);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-
         });
 
+        mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(!wylosowano.equals("0"))
+                {
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
     }
 

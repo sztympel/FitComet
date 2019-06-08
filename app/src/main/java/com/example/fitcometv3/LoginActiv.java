@@ -140,6 +140,9 @@ public class LoginActiv extends AppCompatActivity implements TextWatcher,
                                                 if(!dataSnapshot.child("LastLogin").getValue().toString().trim().equals(dataSnapshot.child("PreviousLogin").getValue().toString().trim()))
                                                 {
                                                     mChecksRef.child("wylosowano").setValue("0");
+                                                    mChecksRef.child("ZSniadanie").setValue("false");
+                                                    mChecksRef.child("ZObiad").setValue("false");
+                                                    mChecksRef.child("ZKolacja").setValue("false");
                                                 }
                                             }
 
