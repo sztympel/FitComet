@@ -27,9 +27,10 @@ public class Diet_Fragment extends Fragment {
 
     int userWiek, userWaga, userWzrost;
     double userKalorie, userPoziomAktywnosci;
+    String wylosowano;
 
     FirebaseAuth mAuth;
-    DatabaseReference mDatabaseRef, mPosilkiRef;
+    DatabaseReference mDatabaseRef, mPosilkiRef, mChecksRef;
 
 
     @Nullable
@@ -49,6 +50,7 @@ public class Diet_Fragment extends Fragment {
 
         mPosilkiRef = FirebaseDatabase.getInstance().getReference().child("Posilki");
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Dane");
+        mChecksRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Checks");
 
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -84,46 +86,96 @@ public class Diet_Fragment extends Fragment {
             }
         });
 
+        mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                wylosowano = dataSnapshot.child("wylosowano").getValue().toString().trim();
+                tvSniadanie.setText(wylosowano);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         mPosilkiRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //userKalorie jest widoczne, dieta jako zestawy co 100 kalorii, <2000, 3000>, łapiące przedział 50
                 //ewentualnie zamiana z posilkiem z innego zestawu, ale tego samego poziomu kalorii
+                if(wylosowano.equals("0"))
+                {
+                    if (userKalorie < 1950)
+                    {
+                        tvSniadanie.setText(dataSnapshot.child("1").child("Śniadanie").getKey().trim() + " nr.1");
+                        tvObiad.setText(dataSnapshot.child("1").child("Obiad").getKey().trim() + " nr.1");
+                        tvKolacja.setText(dataSnapshot.child("1").child("Kolacja").getKey().trim() + " nr.1");
 
-                if (userKalorie < 1950)
-                {
-                    tvSniadanie.setText(dataSnapshot.child("1").child("Śniadanie").getKey().trim() + " nr.1");
-                    tvObiad.setText(dataSnapshot.child("1").child("Obiad").getKey().trim() + " nr.1");
-                    tvKolacja.setText(dataSnapshot.child("1").child("Kolacja").getKey().trim() + " nr.1");
-                }
-                else if(userKalorie > 3050)
-                {
-                    tvSniadanie.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Śniadanie").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
-                    tvObiad.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Obiad").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
-                    tvKolacja.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Kolacja").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
+                        mChecksRef.child("wylosowano").setValue("1");
+                    }
+                    else if(userKalorie > 3050)
+                    {
+                        tvSniadanie.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Śniadanie").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
+                        tvObiad.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Obiad").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
+                        tvKolacja.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Kolacja").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
+
+                        mChecksRef.child("wylosowano").setValue(String.valueOf(dataSnapshot.getChildrenCount()-1));
+                    }
+                    else
+                    {
+                        Random r = new Random();
+                        while (true) {
+                            int k = r.nextInt((int) dataSnapshot.getChildrenCount() - 1 + 1) + 1;
+
+                            int kalorie = dataSnapshot.child(String.valueOf(k)).child("Suma").getValue(Integer.class);
+
+                            if (userKalorie - kalorie <= 50 && userKalorie - kalorie >= -50) {
+                                tvSniadanie.setText(dataSnapshot.child(String.valueOf(k)).child("Śniadanie").getKey().trim() + " nr." + String.valueOf(k));
+                                tvObiad.setText(dataSnapshot.child(String.valueOf(k)).child("Obiad").getKey().trim() + " nr." + String.valueOf(k));
+                                tvKolacja.setText(dataSnapshot.child(String.valueOf(k)).child("Kolacja").getKey().trim() + " nr." + String.valueOf(k));
+
+                                mChecksRef.child("wylosowano").setValue(String.valueOf(k));
+                                break;
+                            }
+                        }
+                    }
                 }
                 else
                 {
-                    Random r = new Random();
-                    while (true) {
-                        int k = r.nextInt((int) dataSnapshot.getChildrenCount() - 1 + 1) + 1;
-
-                        int kalorie = dataSnapshot.child(String.valueOf(k)).child("Suma").getValue(Integer.class);
-
-                        if (userKalorie - kalorie <= 50 && userKalorie - kalorie >= -50) {
-                            tvSniadanie.setText(dataSnapshot.child(String.valueOf(k)).child("Śniadanie").getKey().trim() + " nr." + String.valueOf(k));
-                            tvObiad.setText(dataSnapshot.child(String.valueOf(k)).child("Obiad").getKey().trim() + " nr." + String.valueOf(k));
-                            tvKolacja.setText(dataSnapshot.child(String.valueOf(k)).child("Kolacja").getKey().trim() + " nr." + String.valueOf(k));
-
-                            break;
-                        }
-                    }
+                    tvSniadanie.setText(dataSnapshot.child(wylosowano).child("Śniadanie").getKey().trim() + " nr." + wylosowano);
+                    tvObiad.setText(dataSnapshot.child(wylosowano).child("Obiad").getKey().trim() + " nr." + wylosowano);
+                    tvKolacja.setText(dataSnapshot.child(wylosowano).child("Kolacja").getKey().trim() + " nr." + wylosowano);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
+            }
+        });
+
+        cbSniadanie.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbSniadanie.setEnabled(false);
+                mChecksRef.child("ZSniadanie").setValue("true");
+            }
+        });
+
+        cbObiad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbObiad.setEnabled(false);
+                mChecksRef.child("ZObiad").setValue("true");
+            }
+        });
+
+        cbKolacja.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cbKolacja.setEnabled(false);
+                mChecksRef.child("ZKolacja").setValue("true");
             }
         });
 

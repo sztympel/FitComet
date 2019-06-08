@@ -32,6 +32,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class LoginActiv extends AppCompatActivity implements TextWatcher,
         CompoundButton.OnCheckedChangeListener {
     //
@@ -48,11 +53,11 @@ public class LoginActiv extends AppCompatActivity implements TextWatcher,
     TextView btnRejestracja, btnZapomnianeHaslo;
     EditText editTextEmail, editTextPassword;
 
-    String userEmailString, userPasswordString;
+    String userEmailString, userPasswordString, previousLogin;
 
     FirebaseAuth mAuth;
 
-    DatabaseReference mDatabaseRef;
+    DatabaseReference mDatabaseRef, mChecksRef;
 
     Handler handler = new Handler();
 
@@ -103,6 +108,49 @@ public class LoginActiv extends AppCompatActivity implements TextWatcher,
                                 mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
                                 mDatabaseRef.child("Password").setValue(userPasswordString);
 
+                                mChecksRef = mDatabaseRef.child("Checks");
+
+                                mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        previousLogin = dataSnapshot.child("LastLogin").getValue().toString();
+                                        mChecksRef.child("PreviousLogin").setValue(previousLogin);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                                new Timer().schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        Date date = new Date(mAuth.getCurrentUser().getMetadata().getLastSignInTimestamp());
+                                        mChecksRef.child("LastLogin").setValue(DateFormat.getDateInstance(DateFormat.SHORT).format(date));
+                                    }
+                                }, 1000);
+
+                                new Timer().schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                if(!dataSnapshot.child("LastLogin").getValue().toString().trim().equals(dataSnapshot.child("PreviousLogin").getValue().toString().trim()))
+                                                {
+                                                    mChecksRef.child("wylosowano").setValue("0");
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+                                }, 2000);
+
                                 mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -147,12 +195,6 @@ public class LoginActiv extends AppCompatActivity implements TextWatcher,
                 startActivity(new Intent(LoginActiv.this, ForgotPassActivity.class));
             }
         });
-    }
-
-    public void LoginClick(View view) {
-        Intent intent = new Intent(LoginActiv.this, Welcome_Activity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
     }
 
     @Override
