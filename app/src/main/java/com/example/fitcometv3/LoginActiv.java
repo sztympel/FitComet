@@ -129,7 +129,7 @@ public class LoginActiv extends AppCompatActivity implements TextWatcher,
                                         Date date = new Date(mAuth.getCurrentUser().getMetadata().getLastSignInTimestamp());
                                         mChecksRef.child("LastLogin").setValue(DateFormat.getDateInstance(DateFormat.SHORT).format(date));
                                     }
-                                }, 1000);
+                                }, 500);
 
                                 new Timer().schedule(new TimerTask() {
                                     @Override
@@ -152,7 +152,7 @@ public class LoginActiv extends AppCompatActivity implements TextWatcher,
                                             }
                                         });
                                     }
-                                }, 2000);
+                                }, 800);
 
                                 mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override

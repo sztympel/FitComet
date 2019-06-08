@@ -56,8 +56,6 @@ public class Diet_Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 userKalorie = dataSnapshot.child("TargetKalorie").getValue(Double.class);
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
 

@@ -26,13 +26,15 @@ import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 
 import java.text.DecimalFormat;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public boolean kgTrue = true;
     int kalorieSniadanie, kalorieObiad, kalorieKolacja;
-    String wylosowano = "0";
+    String wylosowano;
 
     int userWiek, userWaga, userWzrost;
     double userKalorie, userPoziomAktywnosci;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity
 
     DatabaseReference mDatabaseRef, mPosilkiRef, mChecksRef;
 
-    TextView tvZapotrzebowanie, tvTaki;
+    TextView tvZapotrzebowanie;
 
     CircularProgressBar circularProgressBar;
 
@@ -56,7 +58,6 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         tvZapotrzebowanie = findViewById(R.id.zapotrzebowanietxt);
-        tvTaki = findViewById(R.id.textViewTaki);
 
         circularProgressBar = findViewById(R.id.circularProgressBar);
 
@@ -113,8 +114,13 @@ public class MainActivity extends AppCompatActivity
         mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.child("wylosowano").exists())
+                if(dataSnapshot.child("wylosowano").exists()) {
                     wylosowano = dataSnapshot.child("wylosowano").getValue().toString().trim();
+                }
+                else
+                {
+                    wylosowano = "0";
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -127,10 +133,37 @@ public class MainActivity extends AppCompatActivity
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if(!wylosowano.equals("0"))
                 {
-                    tvTaki.setText(wylosowano);
                     kalorieSniadanie = dataSnapshot.child(String.valueOf(wylosowano)).child("Śniadanie").getValue(Integer.class);
                     kalorieObiad = dataSnapshot.child(String.valueOf(wylosowano)).child("Obiad").getValue(Integer.class);
                     kalorieKolacja = dataSnapshot.child(String.valueOf(wylosowano)).child("Kolacja").getValue(Integer.class);
+
+                    new Timer().schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if(dataSnapshot.child("ZSniadanie").getValue().toString().equals("true"))
+                                    {
+                                        circularProgressBar.setProgress(circularProgressBar.getProgress() + kalorieSniadanie);
+                                    }
+                                    if(dataSnapshot.child("ZObiad").getValue().toString().equals("true"))
+                                    {
+                                        circularProgressBar.setProgress(circularProgressBar.getProgress() + kalorieObiad);
+                                    }
+                                    if(dataSnapshot.child("ZKolacja").getValue().toString().equals("true"))
+                                    {
+                                        circularProgressBar.setProgress(circularProgressBar.getProgress() + kalorieKolacja);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }, 1000);
                 }
             }
 
@@ -139,22 +172,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-
-        mChecksRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!wylosowano.equals("0"))
-                {
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
     }
 
 
