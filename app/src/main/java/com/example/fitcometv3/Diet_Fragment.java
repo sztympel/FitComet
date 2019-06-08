@@ -26,15 +26,7 @@ public class Diet_Fragment extends Fragment {
     TextView tvKalorie, tvSniadanie, tvObiad, tvKolacja;
 
     int userWiek, userWaga, userWzrost;
-    double userKalorie, userKalorieHolder, userPoziomAktywnosci;
-
-    public double getUserKalorie() {
-        return userKalorie;
-    }
-
-    public void setUserKalorie(double userKalorie) {
-        this.userKalorie = userKalorie;
-    }
+    double userKalorie, userPoziomAktywnosci;
 
     FirebaseAuth mAuth;
     DatabaseReference mDatabaseRef, mPosilkiRef;
@@ -97,9 +89,36 @@ public class Diet_Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 //userKalorie jest widoczne, dieta jako zestawy co 100 kalorii, <2000, 3000>, łapiące przedział 50
                 //ewentualnie zamiana z posilkiem z innego zestawu, ale tego samego poziomu kalorii
-                Random r = new Random();
-                int i1 = r.nextInt(10 - 1 + 1) + 1;
 
+                if (userKalorie < 1950)
+                {
+                    tvSniadanie.setText(dataSnapshot.child("1").child("Śniadanie").getKey().trim() + " nr.1");
+                    tvObiad.setText(dataSnapshot.child("1").child("Obiad").getKey().trim() + " nr.1");
+                    tvKolacja.setText(dataSnapshot.child("1").child("Kolacja").getKey().trim() + " nr.1");
+                }
+                else if(userKalorie > 3050)
+                {
+                    tvSniadanie.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Śniadanie").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
+                    tvObiad.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Obiad").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
+                    tvKolacja.setText(dataSnapshot.child(String.valueOf(dataSnapshot.getChildrenCount()-1)).child("Kolacja").getKey().trim() + " nr." + String.valueOf(dataSnapshot.getChildrenCount()-1));
+                }
+                else
+                {
+                    Random r = new Random();
+                    while (true) {
+                        int k = r.nextInt((int) dataSnapshot.getChildrenCount() - 1 + 1) + 1;
+
+                        int kalorie = dataSnapshot.child(String.valueOf(k)).child("Suma").getValue(Integer.class);
+
+                        if (userKalorie - kalorie <= 50 && userKalorie - kalorie >= -50) {
+                            tvSniadanie.setText(dataSnapshot.child(String.valueOf(k)).child("Śniadanie").getKey().trim() + " nr." + String.valueOf(k));
+                            tvObiad.setText(dataSnapshot.child(String.valueOf(k)).child("Obiad").getKey().trim() + " nr." + String.valueOf(k));
+                            tvKolacja.setText(dataSnapshot.child(String.valueOf(k)).child("Kolacja").getKey().trim() + " nr." + String.valueOf(k));
+
+                            break;
+                        }
+                    }
+                }
             }
 
             @Override
