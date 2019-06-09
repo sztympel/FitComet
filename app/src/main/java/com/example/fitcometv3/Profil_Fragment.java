@@ -29,6 +29,7 @@ public class Profil_Fragment extends Fragment {
     View myView;
     TextView tvUsername, tvEmail, tvWaga, tvWzrost;
     String username;
+    Button btnPopraw;
 
     FirebaseAuth mAuth;
     DatabaseReference mDatabaseRef, mDetialsRef;
@@ -46,6 +47,14 @@ public class Profil_Fragment extends Fragment {
         tvEmail = myView.findViewById(R.id.textViewEmail_Profile);
         tvWaga = myView.findViewById(R.id.textViewWaga_Profile);
         tvWzrost = myView.findViewById(R.id.textViewWzrost_Profile);
+        btnPopraw = myView.findViewById(R.id.buttonPopraw);
+
+        btnPopraw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ChangeDetails.class));
+            }
+        });
 
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

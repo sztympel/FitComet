@@ -73,7 +73,7 @@
         android:textSize="25dp" />
 
     <EditText
-        android:id="@+id/editTextWpisane"
+        android:id="@+id/editTextWycisniete"
         android:layout_width="176dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textConvert"

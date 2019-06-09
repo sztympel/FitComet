@@ -6,9 +6,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,7 +44,7 @@ public class Welcome_Activity extends AppCompatActivity {
         suwakWiek = findViewById(R.id.wieksuwak);
         suwakWzrost = findViewById(R.id.wzrostsuwak);
         buttonMoveToMain = findViewById(R.id.buttonMoveToMain);
-        buttonHelp = findViewById(R.id.buttonHelp);
+        buttonHelp = findViewById(R.id.buttonHelp2);
 
         suwakWaga.setOnProgressChangedListener(new BubbleSeekBar.OnProgressChangedListener() {
             @Override

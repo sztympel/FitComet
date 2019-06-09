@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public boolean kgTrue = true;
     int kalorieSniadanie, kalorieObiad, kalorieKolacja;
-    String wylosowano;
+    String wylosowano, currentUserString;
 
     int userWiek, userWaga, userWzrost;
     double userKalorie, userPoziomAktywnosci;
@@ -55,10 +55,8 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-
         tvZapotrzebowanie = findViewById(R.id.zapotrzebowanietxt);
-
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         circularProgressBar = findViewById(R.id.circularProgressBar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -66,18 +64,25 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mAuth = FirebaseAuth.getInstance();
 
         mPosilkiRef = FirebaseDatabase.getInstance().getReference().child("Posilki");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Dane");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
         mChecksRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid()).child("Checks");
 
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                NavigationView navigationView = findViewById(R.id.nav_view);
+                View headerView = navigationView.getHeaderView(0);
+                TextView currentUser = headerView.findViewById(R.id.LoginAs);
+                currentUser.setText(dataSnapshot.child("Email").getValue().toString().trim());
+
+                dataSnapshot = dataSnapshot.child("Dane");
+
                 if(dataSnapshot.child("Plec").getValue().toString().equals("mezczyzna"))
                 {
                     userWaga = dataSnapshot.child("Waga").getValue(Integer.class);
@@ -87,7 +92,7 @@ public class MainActivity extends AppCompatActivity
 
                     userKalorie = (66.5 + (13.7 * userWaga) + (5 * userWzrost) - (6.8 * userWiek)) * userPoziomAktywnosci;
                     tvZapotrzebowanie.setText(String.format("%.0f", userKalorie));
-                    mDatabaseRef.child("TargetKalorie").setValue(userKalorie);
+                    mDatabaseRef.child("Dane").child("TargetKalorie").setValue(userKalorie);
                     circularProgressBar.setProgressMax((float)userKalorie);
                 }
                 else
@@ -99,7 +104,7 @@ public class MainActivity extends AppCompatActivity
 
                     userKalorie = (655 + (9.6 * userWaga) + (1.85 * userWzrost) - (4.7 * userWiek)) * userPoziomAktywnosci;
                     tvZapotrzebowanie.setText(String.format("%.0f", userKalorie));
-                    mDatabaseRef.child("TargetKalorie").setValue(userKalorie);
+                    mDatabaseRef.child("Dane").child("TargetKalorie").setValue(userKalorie);
                     circularProgressBar.setProgressMax((float)userKalorie);
                 }
             }
@@ -174,7 +179,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -189,10 +193,6 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             finishActivity(0);
         }
-    }
-
-    public interface OnBackPressedListner{
-        boolean onBackPressed();
     }
 
     @Override

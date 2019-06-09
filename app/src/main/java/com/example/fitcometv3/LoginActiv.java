@@ -67,7 +67,6 @@ public class LoginActiv extends AppCompatActivity implements TextWatcher,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-
         btnLogowanie = findViewById(R.id.btnlogowanie);
         btnRejestracja = findViewById(R.id.btnregister);
         btnZapomnianeHaslo = findViewById(R.id.btnforgotpass);
