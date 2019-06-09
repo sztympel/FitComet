@@ -12,8 +12,8 @@
         <item
 
             android:id="@+id/nav_glowna"
-            android:icon="@drawable/ic_profil"
-            android:title="Strona Główna" />
+            android:icon="@drawable/ic_home"
+            android:title="Strona główna" />
         <item
             android:id="@+id/nav_pomiar"
             android:icon="@drawable/miarka_"
@@ -30,10 +30,6 @@
 
         <item android:title="@string/groupgym">
             <menu>
-                <item
-                    android:id="@+id/nav_test"
-                    android:icon="@drawable/ic_setting"
-                    android:title="test" />
                 <item
                     android:id="@+id/nav_gymplan"
                     android:icon="@drawable/ic_gymplan"
@@ -62,10 +58,6 @@
                     android:id="@+id/nav_dietpor"
                     android:icon="@drawable/ic_creative"
                     android:title="@string/dietpor" />
-                <item
-                    android:id="@+id/nav_dietbook"
-                    android:icon="@drawable/ic_bulbbook"
-                    android:title="@string/dietbook" />
                 <item
 
                     android:title="" />

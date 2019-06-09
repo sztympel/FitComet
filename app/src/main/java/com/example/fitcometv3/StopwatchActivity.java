@@ -124,10 +124,6 @@ public class StopwatchActivity extends AppCompatActivity implements NavigationVi
             fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Diet_Fragment()).commit();
         } else if (id == R.id.nav_dietpor) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.DietPor_Fragment()).commit();
-        } else if (id == R.id.nav_dietbook) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Dietbook_Fragment()).commit();
-        } else if (id == R.id.nav_test) {
-
         } else if (id == R.id.nav_calculator) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Calculator_Fragment()).commit();
         } else if (id == R.id.nav_glowna) {
