@@ -27,7 +27,6 @@ public class RegisterActivity extends AppCompatActivity {
     Button buttonRejestracja;
 
     FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListener;
 
     DatabaseReference mDatabaseRef;
 
@@ -42,23 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
         editTextEmail = (EditText) findViewById(R.id.etEmail_Register);
         editTextPassword = (EditText) findViewById(R.id.etPassword_Register);
         buttonRejestracja = (Button) findViewById(R.id.btnRejestracja);
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-
-                if (user != null)
-                {
-
-                }
-                else
-                {
-
-                }
-            }
-        };
 
         buttonRejestracja.setOnClickListener(new View.OnClickListener() {
             @Override

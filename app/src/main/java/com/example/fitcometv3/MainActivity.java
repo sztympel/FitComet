@@ -3,7 +3,7 @@ package com.example.fitcometv3;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
 
         tvZapotrzebowanie = findViewById(R.id.zapotrzebowanietxt);
 
@@ -177,23 +177,23 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            if (Zapis.editDodaj == false) {
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finishActivity(0);
-            } else {
-                Zapis.editDodaj = false;
-                super.onBackPressed();
-
-            }
+        }
+        else
+        {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finishActivity(0);
         }
     }
 
+    public interface OnBackPressedListner{
+        boolean onBackPressed();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -245,14 +245,11 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
-        // Intent intent = new Intent(this, LoginActiv.class);
-        // startActivity(intent);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
 
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
@@ -260,9 +257,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void WagaButtonLicz(View v) {
-
-        boolean zaznaczony = ((RadioButton) v).isChecked();
-
         switch (v.getId()) {
             case R.id.lbs:
                 kgTrue = false;
@@ -272,44 +266,26 @@ public class MainActivity extends AppCompatActivity
                 break;
 
         }
-
     }
 
     public void onClickPrzelicz(View view) {
-        final TextView tv1 = (TextView) findViewById(R.id.wyliczWysw);
-        final EditText eText = (EditText) findViewById(R.id.Waga);
+        final TextView tv1 = findViewById(R.id.textViewWyswietlone);
+        final EditText eText = findViewById(R.id.editTextWpisane);
         DecimalFormat decimalFormat = new DecimalFormat("#.00");
         if (eText.length() == 0 || eText.equals("") || eText == null) {
-            tv1.setText("Podaj Liczbe");
+            tv1.setText("Podaj liczbę !");
         } else {
-            int wagaprzelicz = Integer.parseInt(eText.getText().toString());//jesli nie dziala dac do ifow
+            int wagaprzelicz = Integer.parseInt(eText.getText().toString());
 
             if (kgTrue == true) {
-
                 double wynik = wagaprzelicz * 0.45359237;
-                String FinalWynik = decimalFormat.format(wynik);//new Double(wynik).toString();
+                String FinalWynik = decimalFormat.format(wynik);
                 tv1.setText(FinalWynik);
             } else {
-
                 double wynik = wagaprzelicz / 0.45359237;
                 String FinalWynik = decimalFormat.format(wynik);
                 tv1.setText(FinalWynik);
-
             }
-
         }
-    }
-
-    public void onDodajPomiarCialaClick(View view) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Dodaj_Pomiar_Fragment()).commit();
-    }
-
-
-    public void onDodajPomiarCialaAnulujClick(View view) {
-        Zapis.editDodaj = false;
-        Zapis.anuluj = true;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Pomiar_Fragment()).commit();
     }
 }

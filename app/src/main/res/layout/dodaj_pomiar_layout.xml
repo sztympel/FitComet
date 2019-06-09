@@ -25,14 +25,13 @@
 
 
     <Button
-        android:id="@+id/ButtonDodajPomiar"
+        android:id="@+id/ButtonDodaj_Pomiar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
         android:layout_marginRight="0dp"
-        android:onClick="Sub"
-        android:text="Zatwierdz" />
+        android:text="Zatwierdź" />
 
     <Button
         android:id="@+id/ButtonAnulujPomiar"
@@ -42,21 +41,21 @@
         android:layout_marginLeft="0dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
-        android:onClick="onDodajPomiarCialaAnulujClick"
         android:text="Anuluj" />
 
 
     <TextView
-        android:layout_alignTop="@+id/ButtonDodajPomiar"
-        android:layout_centerInParent="true"
-        android:layout_marginRight="46dp"
-        android:text="Pomiar Ciała"
-        android:textColor="@color/white"
-        android:textSize="25dp"
         android:layout_width="165dp"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/ButtonDodaj_Pomiar"
+        android:layout_centerInParent="true"
         android:layout_marginLeft="115dp"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="46dp"
+        android:text="Pomiar ciała"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="25dp" />
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -83,26 +82,6 @@
                 android:layout_column="0"
                 android:text="            " />
 
-            <TextView
-
-                android:layout_row="2"
-                android:layout_column="0"
-                android:background="@drawable/wagatekst"
-                android:textSize="25sp" />
-
-            <EditText
-                android:id="@+id/wagaET"
-                android:layout_row="2"
-                android:layout_column="1"
-                android:layout_marginLeft="30dp"
-                android:background="@drawable/et_bg_black"
-                android:hint="Wpisz Tutaj Swoja Wage"
-                android:inputType="number"
-                android:paddingLeft="5dp"
-                android:paddingTop="5dp"
-                android:paddingRight="5dp"
-                android:paddingBottom="5dp" />
-
 
             <TextView
 
@@ -113,14 +92,14 @@
 
             <EditText
                 android:id="@+id/chestET"
+                android:layout_width="175dp"
                 android:layout_height="wrap_content"
                 android:layout_row="4"
                 android:layout_column="1"
                 android:layout_marginLeft="30dp"
-                android:background="@drawable/et_bg_black"
-                android:hint="Obwód Kl.Piersiowej"
-                android:inputType="number"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/et_bg_black"
+                android:inputType="number"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
                 android:paddingRight="5dp"
@@ -136,11 +115,11 @@
 
             <EditText
                 android:id="@+id/bicepsET"
+                android:layout_width="175dp"
                 android:layout_row="5"
                 android:layout_column="1"
                 android:layout_marginLeft="30dp"
                 android:background="@drawable/et_bg_black"
-                android:hint="Wpisz Obwód Biceps"
                 android:inputType="number"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
@@ -157,11 +136,11 @@
 
             <EditText
                 android:id="@+id/taliET"
+                android:layout_width="175dp"
                 android:layout_row="6"
                 android:layout_column="1"
                 android:layout_marginLeft="30dp"
                 android:background="@drawable/et_bg_black"
-                android:hint="Obwód Talii"
                 android:inputType="number"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
@@ -178,11 +157,11 @@
 
             <EditText
                 android:id="@+id/biodraET"
+                android:layout_width="175dp"
                 android:layout_row="8"
                 android:layout_column="1"
                 android:layout_marginLeft="30dp"
                 android:background="@drawable/et_bg_black"
-                android:hint="Obwód Pasa"
                 android:inputType="number"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
@@ -199,11 +178,11 @@
 
             <EditText
                 android:id="@+id/udaET"
+                android:layout_width="175dp"
                 android:layout_row="9"
                 android:layout_column="1"
                 android:layout_marginLeft="30dp"
                 android:background="@drawable/et_bg_black"
-                android:hint="Obwód Uda"
                 android:inputType="number"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"
@@ -220,11 +199,11 @@
 
             <EditText
                 android:id="@+id/lydkET"
+                android:layout_width="175dp"
                 android:layout_row="10"
                 android:layout_column="1"
                 android:layout_marginLeft="30dp"
                 android:background="@drawable/et_bg_black"
-                android:hint="Obwód Łydki"
                 android:inputType="number"
                 android:paddingLeft="5dp"
                 android:paddingTop="5dp"

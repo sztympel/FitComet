@@ -4,16 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="46dp"
-        android:text="Przelicznik"
-        android:textColor="@color/white"
-        android:textSize="25dp" />
-
     <GridLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -21,7 +11,9 @@
         <include
             layout="@layout/app_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_row="0"
+            android:layout_column="0" />
 
 
     </GridLayout>
@@ -35,7 +27,7 @@
         android:background="@drawable/et_bg_white"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:text="Konwertuj Na : "
+        android:text="Konwertuj na :"
         android:textSize="30dp" />
 
     <RadioGroup
@@ -59,22 +51,38 @@
             android:id="@+id/kg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:onClick="WagaButtonLicz"
             android:paddingRight="30dp"
             android:text="KG" />
+
     </RadioGroup>
 
+    <TextView
+        android:layout_width="183dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="114dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="114dp"
+        android:layout_marginRight="46dp"
+        android:text="Przelicznik"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="25dp" />
+
     <EditText
-        android:id="@+id/Waga"
+        android:id="@+id/editTextWpisane"
         android:layout_width="176dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textConvert"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="117dp"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="38dp"
-        android:background="@drawable/et_bg_black"
-        android:hint="Wpisz Cieżar Tutaj"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="118dp"
         android:inputType="number"
         android:maxLines="1"
         android:paddingLeft="10dp"
@@ -83,15 +91,14 @@
         android:paddingBottom="10dp" />
 
     <Button
-        android:id="@+id/WagaBut"
+        android:id="@+id/buttonPrzelicz"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Waga"
+        android:layout_below="@+id/editTextWpisane"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="115dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginEnd="298dp"
-        android:background="@drawable/et_bg_black"
+        android:layout_marginStart="138dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginBottom="320dp"
         android:onClick="onClickPrzelicz"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
@@ -101,31 +108,20 @@
         android:textSize="20dp" />
 
     <TextView
-        android:paddingVertical="5dp"
-        android:textAlignment="center"
-        android:id="@+id/wyliczWysw"
-        android:layout_width="wrap_content"
+        android:id="@+id/textViewWyswietlone"
+        android:layout_width="176dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/WagaBut"
+        android:layout_alignTop="@+id/editTextWpisane"
         android:layout_alignParentStart="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="22dp"
-        android:background="@drawable/et_bg_black"
-        android:hint="Tutaj zostanie Wyswietlona Wartosc"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="117dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="145dp"
+        android:layout_marginEnd="118dp"
+        android:background="@drawable/et_bg_white"
         android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingRight="15dp"
-        android:paddingBottom="10dp"
-        android:textSize="30dp" />
+        android:paddingRight="10dp"
+        android:textAlignment="center"
+        android:textSize="18sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="46dp"
-        android:text="Przelicznik"
-        android:textColor="@color/white"
-        android:textSize="25dp" />
 </RelativeLayout>

@@ -27,7 +27,7 @@ public class Welcome_Activity extends AppCompatActivity {
     double userPoziomAktywnosci = 0;
 
     FirebaseAuth mAuth;
-    DatabaseReference mDatabaseRef, mDetailsRef;
+    DatabaseReference mDatabaseRef, mDetailsRef, mPomiaryRef, mChecksRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,6 +173,18 @@ public class Welcome_Activity extends AppCompatActivity {
                     mDetailsRef.child("Wzrost").setValue(userWzrost);
                     mDetailsRef.child("Plec").setValue(userPlec);
                     mDetailsRef.child("PoziomAktywnosci").setValue(userPoziomAktywnosci);
+
+                    mPomiaryRef = mDatabaseRef.child("Pomiary");
+                    mPomiaryRef.child("N_KlatkaPiersiowa").setValue(0);
+                    mPomiaryRef.child("N_Biceps").setValue(0);
+                    mPomiaryRef.child("N_Talia").setValue(0);
+                    mPomiaryRef.child("N_Pas").setValue(0);
+                    mPomiaryRef.child("N_Udo").setValue(0);
+                    mPomiaryRef.child("N_Lydka").setValue(0);
+
+                    mChecksRef = mDatabaseRef.child("Checks");
+                    mChecksRef.child("LastLogin").setValue("");
+                    mChecksRef.child("PreviousLogin").setValue("");
 
                     Intent intent = new Intent(Welcome_Activity.this, MainActivity.class);
                     startActivity(intent);

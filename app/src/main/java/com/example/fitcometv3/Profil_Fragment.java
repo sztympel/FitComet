@@ -28,11 +28,9 @@ import com.google.firebase.database.ValueEventListener;
 public class Profil_Fragment extends Fragment {
     View myView;
     TextView tvUsername, tvEmail, tvWaga, tvWzrost;
-    Button btnDeleteAccount;
     String username;
 
     FirebaseAuth mAuth;
-    FirebaseUser firebaseUser;
     DatabaseReference mDatabaseRef, mDetialsRef;
 
     @Nullable
@@ -41,7 +39,6 @@ public class Profil_Fragment extends Fragment {
         myView = inflater.inflate(R.layout.profil_layout,container,false);
 
         mAuth = FirebaseAuth.getInstance();
-        firebaseUser = mAuth.getCurrentUser();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users").child(mAuth.getCurrentUser().getUid());
         mDetialsRef = mDatabaseRef.child("Dane");
 
@@ -49,49 +46,6 @@ public class Profil_Fragment extends Fragment {
         tvEmail = myView.findViewById(R.id.textViewEmail_Profile);
         tvWaga = myView.findViewById(R.id.textViewWaga_Profile);
         tvWzrost = myView.findViewById(R.id.textViewWzrost_Profile);
-        btnDeleteAccount = myView.findViewById(R.id.buttonDeleteAccount);
-
-        btnDeleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
-                dialog.setTitle("Jesteś pewien?");
-                dialog.setMessage("Jeśli się zgodzisz Twoje konto zostanie usunięte na ZAWSZE!");
-                dialog.setPositiveButton("Usuń", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        mDatabaseRef = FirebaseDatabase.getInstance().getReference().child("Users");
-                        mDatabaseRef.child(mAuth.getCurrentUser().getUid()).removeValue();
-
-                        firebaseUser.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task.isSuccessful())
-                                {
-                                    Toast.makeText(getActivity(), "Usunięto konto !", Toast.LENGTH_SHORT).show();
-
-                                    Intent intent = new Intent(getActivity(), LoginActiv.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(intent);
-                                }
-                                else
-                                    Toast.makeText(getActivity(), "Coś poszło nie tak", Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                });
-                dialog.setNegativeButton("Anuluj", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
-            }
-        });
 
         mDatabaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
