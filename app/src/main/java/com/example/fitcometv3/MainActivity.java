@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.Timer;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public boolean kgTrue = true;
     int kalorieSniadanie, kalorieObiad, kalorieKolacja;
-    String wylosowano, currentUserString;
+    String wylosowano="0";
 
     int userWiek, userWaga, userWzrost;
     double userKalorie, userPoziomAktywnosci;
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Zapis.editDodaj = false;
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -225,12 +225,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_setting) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Settings_Fragment()).addToBackStack(null).commit();
         } else if (id == R.id.nav_stopwatch) {
-            Intent intent = new Intent(this, StopwatchActivity.class);
-            startActivity(intent);
+            fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Stopwatch_Fragment()).addToBackStack(null).commit();
         } else if (id == R.id.nav_gymplan) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Gymplan_Fragment()).addToBackStack(null).commit();
-        } else if (id == R.id.nav_maxweight) {
-            fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Gymmax_Fragment()).addToBackStack(null).commit();
         } else if (id == R.id.nav_diet) {
             fragmentManager.beginTransaction().replace(R.id.content_frame, new com.example.fitcometv3.Diet_Fragment()).addToBackStack(null).commit();
         } else if (id == R.id.nav_dietpor) {

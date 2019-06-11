@@ -114,7 +114,7 @@ public class Pomiar_Fragment extends Fragment {
                         WynikProcent = d / e * 100;
                         FinalWynik = decimalFormat.format(WynikProcent);
 
-                        tvTkankaTluszczowa1.setText(FinalWynik + " %");
+                        tvTkankaTluszczowa1.setText(FinalWynik);
                     }
 
                     tvPomiarBiceps2.setText(dataSnapshot.child("N_Biceps").getValue().toString().trim());
@@ -133,7 +133,7 @@ public class Pomiar_Fragment extends Fragment {
                     WynikProcent = d / e * 100;
                     FinalWynik = decimalFormat.format(WynikProcent);
 
-                    tvTkankaTluszczowa2.setText(FinalWynik + " %");
+                    tvTkankaTluszczowa2.setText(FinalWynik);
                 }
             }
 
