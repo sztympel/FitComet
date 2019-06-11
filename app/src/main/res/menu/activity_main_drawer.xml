@@ -35,10 +35,6 @@
                     android:icon="@drawable/ic_gymplan"
                     android:title="@string/gymplan" />
                 <item
-                    android:id="@+id/nav_maxweight"
-                    android:icon="@drawable/ic_gym"
-                    android:title="@string/maxweight" />
-                <item
                     android:id="@+id/nav_stopwatch"
                     android:icon="@drawable/ic_stoper"
                     android:title="@string/stopwatch" />

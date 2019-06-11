@@ -61,14 +61,14 @@ public class Profil_Fragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 username = dataSnapshot.child("Username").getValue().toString();
-                tvEmail.setText("E-mail:  \n" + dataSnapshot.child("Email").getValue().toString());
+                tvEmail.setText(dataSnapshot.child("Email").getValue().toString());
 
                 mDetialsRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         tvUsername.setText(username + ",  " + dataSnapshot.child("Wiek").getValue().toString());
-                        tvWaga.setText("Waga:  " + dataSnapshot.child("Waga").getValue().toString());
-                        tvWzrost.setText("Wzrost:  " + dataSnapshot.child("Wzrost").getValue().toString());
+                        tvWaga.setText(dataSnapshot.child("Waga").getValue().toString());
+                        tvWzrost.setText(dataSnapshot.child("Wzrost").getValue().toString());
                     }
 
                     @Override

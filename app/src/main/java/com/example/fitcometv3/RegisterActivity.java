@@ -28,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
 
-    DatabaseReference mDatabaseRef;
+    DatabaseReference mDatabaseRef, mChecksRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 mDatabaseRef.child("Username").setValue(userUsernameString);
                                 mDatabaseRef.child("Email").setValue(userEmailString);
                                 mDatabaseRef.child("Password").setValue(userPasswordString);
+
+                                mChecksRef = mDatabaseRef.child("Checks");
+                                mChecksRef.child("LastLogin").setValue("");
+                                mChecksRef.child("PreviousLogin").setValue("");
 
                                 startActivity(new Intent(RegisterActivity.this, LoginActiv.class));
                                 Toast.makeText(RegisterActivity.this, "Stworzono użytkownika", Toast.LENGTH_SHORT).show();

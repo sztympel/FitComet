@@ -38,7 +38,6 @@ public class Dodaj_Pomiar_Fragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Zapis.editDodaj = true;
         myView = inflater.inflate(R.layout.dodaj_pomiar_layout, container, false);
         talia1 = myView.findViewById(R.id.taliET);
         biceps1 = myView.findViewById(R.id.bicepsET);

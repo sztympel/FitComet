@@ -14,7 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-public class Message_Fragment extends Fragment implements View.OnClickListener {
+public class Message_Fragment extends Fragment{
     View myView;
     Button messageID;
     TextView messageTV;
@@ -27,21 +27,16 @@ public class Message_Fragment extends Fragment implements View.OnClickListener {
         messageTV = (TextView) myView.findViewById(R.id.messageTVs);
 
         messageID = (Button) myView.findViewById(R.id.messageID);
-        messageID.setOnClickListener(this);
-
-        return myView;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.messageID:
-                //DOKONCZYC WYSYLANIE
+        messageID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 String messageText = messageTV.getText().toString();
                 Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-                emailIntent.setData(Uri.parse("mailto:teamfitcomet@gmail.com"));
+                emailIntent.setData(Uri.parse("mailto:?subject=" + "&body=" + messageText + "&to=" + "teamfitcomet@gmail.com"));
                 startActivity(Intent.createChooser(emailIntent, "Send feedback"));
-                break;
-        }
+            }
+        });
+
+        return myView;
     }
 }
